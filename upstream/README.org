@@ -1,0 +1,2 @@
+This directory contains chunks of upstream5000.fa.  Each chunk is
+30300 lines long (except for the last) and contains 300 refseqs.  (Ditto)
