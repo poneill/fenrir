@@ -2,7 +2,7 @@
 *.pkl
 # compiled Python modules
 *.pyc 
-#  genebank files:
+# genebank files:
 *.gbk
 # fasta files:
 *.fa
