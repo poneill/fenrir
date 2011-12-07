@@ -1,0 +1,11 @@
+# Pickle files are compressed Python objects.  Don't store these:
+*.pkl
+# compiled Python modules
+*.pyc 
+#  genebank files:
+*.gbk
+# fasta files:
+*.fa
+*.fas
+# Definitely not .dat files:
+*.dat 
