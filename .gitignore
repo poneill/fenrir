@@ -11,3 +11,5 @@
 *.dat 
 # And definitely not ever an emacs backup file:
 *~
+# tarballs:
+*.tar*
