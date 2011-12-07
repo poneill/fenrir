@@ -1,0 +1,17 @@
+* Overview
+This directory contains Python pickle files, each containing a
+dictionary of transcription factor binding site scores for a given
+collection of genes.  The structure of the dictionary is as follows:
+
+Dictionary:
+- Promoter :: TF 
+- TF :: (position, score)
+
+That is, each dictionary has promoters as keys and a dictionary
+associating TFs with (position, score) pairs as values.
+
+Another way of thinking through this is that a dictionary =dict= could
+accept keys =promoter= and =tf= and return a list of =(position,
+score)= pairs with the following syntax:
+
+: dict[promoter][tf] # == [(position, score)]
