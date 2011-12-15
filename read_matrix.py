@@ -2,7 +2,7 @@
 print "starting"
 import sys, re, math, random, itertools, time, pickle
 import matrix_parser
-print "finished imports"
+default_sequence_file = "upstream/upstream5000.fa"
 base_pair_ordering = "acgt"
 
 def lexicographic_cmp(xs,ys):
@@ -305,7 +305,7 @@ def test_lcps(n):
     		print False, a, b
 print __name__
 if __name__ == "__main__":
-    gene_file = sys.argv[1] if len(sys.argv) > 1 else "upstream5000.fa"
+    gene_file = sys.argv[1] if len(sys.argv) > 1 else default_sequence_file
 
     with open("matrix.dat") as f:
         lines = f.readlines()
