@@ -1,3 +1,4 @@
+#!/bin/python
 import os, pickle,sys
 from Bio import Entrez, SeqIO
 sys.path.append("..")
