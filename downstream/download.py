@@ -1,5 +1,5 @@
 #!/bin/python
-import os, pickle,sys
+import os, pickle,sys, read_matrix
 from Bio import Entrez, SeqIO
 sys.path.append("..")
 from read_matrix import *
@@ -7,7 +7,7 @@ Entrez.email = "pon2@umbc.edu"
 print os.getcwd()
 print "parsing upstream regions"
 if not os.path.isfile("upstream_regions.pkl"):
-    upstream_regions = parse_urs("../upstream5000.fa")
+    upstream_regions = parse_urs("../upstream/upstream5000.fa")
     with open("upstream_regions.pkl",'w') as ur_handle:
         pickle.dump(upstream_regions,ur_handle)
 else:
