@@ -2,7 +2,7 @@ from __future__ import division
 from scipy.stats import gaussian_kde
 import numpy as np
 from matplotlib import pyplot as plt
-import random
+import random, os, pickle
 
 def score_distribution(tf, score_dictionary):
     """given a dictionary of scores such that
@@ -20,10 +20,19 @@ def total_score_distribution(score_dictionary):
             for tf in score_dictionary[promoter]
             for (position, score) in score_dictionary[promoter][tf]]
 
-def index_distribution(promoter, score_dictionary, cutoff = 0, entropy=True):
+def index_distribution(promoter, score_dictionary, cutoff = 0,
+                       entropy=True, bp_min=0,bp_max=5000):
     return [position for tf in score_dictionary[promoter]
             for (position, score) in score_dictionary[promoter][tf]
-            if score > (tf_from_id(tf).entropy if entropy else cutoff)]
+            if ((bp_min <= position <= bp_max) and
+                 score > (tf_from_id(tf).entropy if entropy else cutoff))]
+
+def tf_distribution(tf, score_dictionary, cutoff = 0,
+                    entropy=True, bp_min=0,bp_max=5000):
+    return [position for promoter in score_dictionary
+            for (position, score) in score_dictionary[promoter][tf]
+            if ((bp_min <= position <= bp_max) and
+                score > (tf_from_id(tf).entropy if entropy else cutoff))]
 
 def tf_from_id(tf):
     return [mr for mr in more_refined if mr.ID == tf][0]
@@ -159,3 +168,50 @@ def kmeans_iterate(xss,k,n):
             i = 0
     return old_clusters
 
+def compile_dictionaries():
+    "gather up all the x** dictionaries, check for redundancies"
+    print "getting unique refseqs"
+    with open("unique_refseqs.txt") as f:
+        uniques = [line.strip() for line in f.readlines()]
+    ur_dict = {}
+    for filename in os.listdir('pickles'):
+        if "pickle" in filename:
+            print filename
+            with open("pickles/" + filename) as handle:
+                print "beginning unpickling"
+                d = pickle.load(handle)
+                print "finished unpickling"
+            for key in d:
+                if key in uniques:
+                    uniques.remove(key)
+                    ur_dict[key] = d[key]
+            print len(uniques)
+    return ur_dict
+
+def uniquify_dictionaries():
+    "iterate through x** pickle objects, create unique versions"
+    print "getting unique refseqs"
+    with open("unique_refseqs.txt") as f:
+        uniques = [line.strip() for line in f.readlines()]
+    for filename in os.listdir('pickles'):
+        if "pickle" in filename:
+            print filename
+            unique_dict = {}
+            with open("pickles/" + filename) as handle:
+                print "beginning unpickling"
+                d = pickle.load(handle)
+                print "finished unpickling"
+            for key in d:
+                if key in uniques:
+                    uniques.remove(key)
+                    unique_dict[key] = d[key]
+            with open("pickles/" + filename + "unique.pickle",'w') as handle:
+                pickle.dump(unique_dict,handle)
+            print len(uniques)
+
+def gc_box(seq,window=50):
+    return [len([b for b in box if b == 'a' or b == 't'])/window
+            for box in [seq[i:i+window] for i in range(len(seq)-window)]]
+
+def add_vectors(u,*vs):
+    
