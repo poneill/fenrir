@@ -9,3 +9,6 @@
     Searches upstream regions (either upstream5000.fa, or as passed by
     command line arg) for transcription factors, storing resulting
     score objects in pickle format.
+** Dependencies
+*** Biopython
+: sudo apt-get install python-biopython
