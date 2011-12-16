@@ -1,0 +1,11 @@
+* Fenrir: Tools for large-scale TFBS search
+
+** Components
+*** suffixtree 
+    Defines ST (suffix tree) and ESA (extended suffix array) classes.
+*** matrix_parser
+    Defines TransfacTable and TranscriptionFactor classes
+*** read_matrix
+    Searches upstream regions (either upstream5000.fa, or as passed by
+    command line arg) for transcription factors, storing resulting
+    score objects in pickle format.
