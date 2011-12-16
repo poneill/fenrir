@@ -1,7 +1,7 @@
 #!/usr/bin/python
 print "starting"
 import sys, re, math, random, itertools, time, pickle
-import matrix_parser
+import matrix_parser, analysis
 default_sequence_file = "upstream/upstream5000.fa"
 base_pair_ordering = "acgt"
 
@@ -308,14 +308,21 @@ if __name__ == "__main__":
     gene_file = sys.argv[1] if len(sys.argv) > 1 else default_sequence_file
     print "making transfac table"
     tt = matrix_parser.TransfacTable("dat/matrix.dat")
-    bustos_terms = [line.strip() for line in open("bustos_terms.txt").readlines()]
-    more_refined = [tf for term in bustos_terms
+    toi = [line.strip() for line in open("terms_of_interest.txt").readlines()]
+    more_refined = [tf for term in toi
                     for tf in tt.entries
                     if (term.upper() in tf.ID.upper()
                         or term.upper() in tf.NA.upper())]
     print "parsing upstream regions"
     upstream_regions = parse_urs(gene_file)
-    results = search_urs_for_pssms(upstream_regions,more_refined,.001)
+    #eliminate redundancies:
+    uniques = set(upstream_regions.values())
+    urs = {}
+    for ur in upstream_regions:
+        if upstream_regions[ur] in uniques:
+            urs[ur] = upstream_regions[ur]
+    print len(urs)
+    results = search_urs_for_pssms(urs,more_refined,.001)
     with open(filename + ".pickle",'w') as f:
         pickle.dump(results,f)
     print "done"
