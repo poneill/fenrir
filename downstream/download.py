@@ -1,10 +1,17 @@
 #!/bin/python
-import os, pickle,sys
+import os, pickle,sys, time
 from Bio import Entrez, SeqIO
 sys.path.append("..")
 from read_matrix import *
+
+def log(text):
+    print text
+    with open("download.log","a") as logfile:
+        logfile.write(text + "\n")
+
 Entrez.email = "pon2@umbc.edu"
 print os.getcwd()
+log("starting at" + time.asctime(time.localtime()))
 print "parsing upstream regions"
 if not os.path.isfile("upstream_regions.pkl"):
     upstream_regions = parse_urs("../upstream/upstream5000.fa")
@@ -82,3 +89,12 @@ print "recovered", len([il for gene in genes for il in gene]), "genes"
 print len(wrong_lengths), "were of wrong length"
 print "encountered problems with", len(bad_apples)
 print "should retry", len(retries)
+
+if not os.path.isfile("genes.pkl"):
+    with open("genes.pkl",'w') as gene_handle:# heh
+        pickle.dump(genes,gene_handle)
+else:
+    print "warning: genes.pkl already exists"
+    print "saving to backup"
+    with open("genes.pkl.bak",'w') as gene_handle:# heh
+        pickle.dump(genes,gene_handle)
