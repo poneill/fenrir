@@ -16,3 +16,5 @@
 *.tar*
 # log files:
 *.log
+# list of unique_refseqs:
+unique_refseqs.txt
