@@ -4,14 +4,16 @@ from Bio import Entrez, SeqIO
 sys.path.append("..")
 from read_matrix import *
 
-def log(text):
-    print text
+def log(text, *args):
+    all_args = (text,) + args
+    all_text = " ".join(map(str,all_args))
+    print all_text
     with open("download.log","a") as logfile:
-        logfile.write(text + "\n") #is this a performance issue?
+        logfile.write(all_text + "\n") #is this a performance issue?
 
 Entrez.email = "pon2@umbc.edu"
 log( os.getcwd())
-log("starting at" + time.asctime(time.localtime()))
+log("starting at " + time.asctime(time.localtime()))
 log( "parsing upstream regions")
 if not os.path.isfile("upstream_regions.pkl"):
     upstream_regions = parse_urs("../upstream/upstream5000.fa")
