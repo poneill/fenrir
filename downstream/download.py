@@ -15,7 +15,8 @@ else:
 print "computing mapping"
 mapping = open("gene_mrna_mapping.txt").readlines()
 print "computing refseqs"
-refseqs = [filter(lambda x: x,line.strip().split('\t')) for line in mapping if line.strip().startswith('NM')]
+refseqs = [filter(lambda x: x,line.strip().split('\t'))
+           for line in mapping if line.strip().startswith('NM')]
 print "computing accession numbers"
 nms = [nm[:nm.index('_',3)] for nm in upstream_regions.keys()]
 print "finding relevant refseqs"
