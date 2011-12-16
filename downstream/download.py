@@ -1,5 +1,5 @@
 #!/bin/python
-import os, pickle,sys, read_matrix
+import os, pickle,sys
 from Bio import Entrez, SeqIO
 sys.path.append("..")
 from read_matrix import *
@@ -8,10 +8,10 @@ print os.getcwd()
 print "parsing upstream regions"
 if not os.path.isfile("upstream_regions.pkl"):
     upstream_regions = parse_urs("../upstream/upstream5000.fa")
-    with open("upstream_regions.pkl",'w') as ur_handle:
+    with open("../upstream/upstream_regions.pkl",'w') as ur_handle:
         pickle.dump(upstream_regions,ur_handle)
 else:
-    with open("upstream_regions.pkl") as ur_handle:
+    with open("../upstream/upstream_regions.pkl") as ur_handle:
         upstream_regions = pickle.load(ur_handle)
 print "computing mapping"
 mapping = open("gene_mrna_mapping.txt").readlines()
