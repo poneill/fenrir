@@ -1,0 +1,44 @@
+
+* The sizes of things
+** Upstream regions
+*** 32GB
+    of which,
+*** 22k unique
+    Presumably, every gene in hg
+** Transcription factors
+*** Begin with ~5k
+*** Cull to 207
+** Resulting data
+*** Searching all utrs, 4GB of data
+    Stored as compressed Python objects.
+    Dictionaries of form:
+: dict[upstream_region][tf] => [(position,score)]
+    Impossible to load all results into memory simultaneously.
+**** Strategy: uniquify, put back on disk
+     Expect 33% reduction, so ~2.67GB after uniquification?  After
+     uniquification, size of each chunk ~35M -> 18M X 112 chunks.
+     Entire results would still likely not fit in memory.
+
+* Literature
+
+** Koudritsky and Domany
+
+*** 9 genes:
+- OCT4
+- SOX2
+- NANOG
+- HNF1A
+- HNF4A
+- HNF6
+- FOXa2
+- USF1
+- CREB1
+
+*** Coverage
+    -8kb to +2kb
+
+*** How many genes per tf?
+    They say: 10^2-10^3
+
+*** Per TF distribution:
+    Narrow peak at -300 bp, uniform density otherwise
