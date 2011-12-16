@@ -7,7 +7,7 @@ from read_matrix import *
 def log(text):
     print text
     with open("download.log","a") as logfile:
-        logfile.write(text + "\n")
+        logfile.write(text + "\n") #is this a performance issue?
 
 Entrez.email = "pon2@umbc.edu"
 log( os.getcwd())
