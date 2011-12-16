@@ -35,7 +35,8 @@ print "starting lookup"
 for dr in desired_refseqs:
     if len(dr) == 3:
         idnum = [entry for entry in dr
-                 if (entry != '1' and entry != '-1' and not entry.startswith('NM_'))][0]
+                 if (entry != '1' and entry != '-1'
+                     and not entry.startswith('NM_'))][0]
         print "looking up ", idnum
         handle = Entrez.esearch(db="nucleotide", term=idnum)
         record = Entrez.read(handle)
