@@ -306,17 +306,8 @@ def test_lcps(n):
 print __name__
 if __name__ == "__main__":
     gene_file = sys.argv[1] if len(sys.argv) > 1 else default_sequence_file
-
-    with open("matrix.dat") as f:
-        lines = f.readlines()
-
-    matrices = parse_lines_for_matrices(lines)
-    pssms = {}
-    for acc_name in matrices.keys():
-        pssms[acc_name] = pssm_from_matrix(matrices[acc_name])
-
     print "making transfac table"
-    tt = matrix_parser.TransfacTable("matrix.dat")
+    tt = matrix_parser.TransfacTable("dat/matrix.dat")
     bustos_terms = [line.strip() for line in open("bustos_terms.txt").readlines()]
     more_refined = [tf for term in bustos_terms
                     for tf in tt.entries
