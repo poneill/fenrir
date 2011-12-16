@@ -176,31 +176,3 @@ def levenshtein(s1, s2):#from wikibooks
         previous_row = current_row
  
     return previous_row[-1]
-
-def find_duplicates(urs):
-    duplicates = [(i,j) for i,r in enumerate(urs)
-                  for j,s in enumerate(urs)
-                  if i < j]
-    return duplicates
-
-def find_closure(duplicates):
-    components = []
-    appended = False
-    for pair in duplicates:
-        appended = False
-        #print "pair", pair
-        for component in components:
-            #print "component", component
-            if pair[0] in component or pair[1] in component:
-                #print "adding", pair, "to", component
-                component += list(pair)
-                appended = True
-                break
-        #print "didn't find ", pair, "in components", "appended:", appended
-        if not appended:
-            #print "adding new component", pair
-            components.append(list(pair))
-    return [list(set(c)) for c in components]
-
-def deletables(components):
-    return sorted(sum([c[1:] for c in components],[]))
