@@ -319,10 +319,15 @@ if __name__ == "__main__":
     uniques = set(upstream_regions.values())
     urs = {}
     for ur in upstream_regions:
-        if upstream_regions[ur] in uniques:
-            urs[ur] = upstream_regions[ur]
+        val = upstream_regions[ur]
+        if val in uniques:
+            uniques.remove(val)
+            urs[ur] = val
     print len(urs)
     results = search_urs_for_pssms(urs,more_refined,.001)
+    with open("unique_refseqs.txt",'w') as g:
+        for refseq in urs.keys():
+            g.write(refseq + "\n")
     with open(filename + ".pickle",'w') as f:
         pickle.dump(results,f)
     print "done"
