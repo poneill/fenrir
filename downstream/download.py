@@ -53,7 +53,7 @@ for dr in desired_refseqs:
         for il in record['IdList']:
             if os.path.isfile(il + ".gbk"):
                 log("already looked up", il)
-                with open(il + ".gbk") as in_handle:
+                with open(os.path.join("gbks", il + ".gbk")) as in_handle:
                     try:
                         record = SeqIO.read(in_handle, "genbank")
                         genes[idnum][il] = record
@@ -71,7 +71,7 @@ for dr in desired_refseqs:
                     continue
                 log("writing to disk")
                 try:
-                    with open(il + ".gbk",'w') as out_handle:
+                    with open(os.path.join("gbks", il + ".gbk")) as out_handle:
                         out_handle.write(record.format("gb"))
                     log("storing in dictionary")
                     genes[idnum][il] = record
