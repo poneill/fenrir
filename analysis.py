@@ -20,6 +20,15 @@ def total_score_distribution(score_dictionary):
             for tf in score_dictionary[promoter]
             for (position, score) in score_dictionary[promoter][tf]]
 
+def total_index_distribution(score_dictionary,cutoff=0):
+    """given a dictionary of scores such that
+    score_dictioanry[promoter][tf] returns a list of (position, score)
+    pairs, return all scores"""
+    return [position for promoter in score_dictionary
+            for tf in score_dictionary[promoter]
+            for (position, score) in score_dictionary[promoter][tf]
+            if score > cutoff]
+
 def index_distribution(promoter, score_dictionary, cutoff = 0,
                        entropy=True, bp_min=0,bp_max=5000):
     return [position for tf in score_dictionary[promoter]
@@ -213,5 +222,8 @@ def gc_box(seq,window=50):
     return [len([b for b in box if b == 'a' or b == 't'])/window
             for box in [seq[i:i+window] for i in range(len(seq)-window)]]
 
-def add_vectors(u,*vs):
-    
+def add_vectors(vs):
+    return map(lambda x: x[0], zip(map(sum, zip(*vs))))
+
+def indicate_at(seq):
+    return [(b == 'a' or b == 't') * 1 for b in seq]
