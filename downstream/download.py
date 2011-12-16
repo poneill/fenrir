@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python
 import os, pickle,sys, time
 from Bio import Entrez, SeqIO
 sys.path.append("..")
