@@ -1,4 +1,14 @@
 #!/usr/bin/env python
+
+# The purpose of this script is to download genebank files for the
+# genes associated with the given upstream region as defined in
+# gene_mrna_mapping.txt.  The genebank files are stored in /gbks, and
+# a nested Python dictionary of the form genes[idnum][il] = record is
+# produced, where idnum is a refseq identifier, il is an identifier
+# indicating the index of the search result from the Entrez query, and
+# the record is the gbk.  The dictionary is stored in pickled form as
+# genes.pkl.
+
 import os, pickle,sys, time
 from Bio import Entrez, SeqIO
 sys.path.append("..")
@@ -32,7 +42,7 @@ nms = [nm[:nm.index('_',3)] for nm in upstream_regions.keys()]
 log("finding relevant refseqs")
 if not os.path.isfile("desired_refseqs.pkl"):
     desired_refseqs = [rs for rs in refseqs if rs[0] in nms]
-    with open("desired_refseqs.pkl",'w') as pickle_handle:# heh
+    with open("desired_refseqs.pkl",'w') as pickle_handle:
         pickle.dump(desired_refseqs,pickle_handle)
 else:
     with open("desired_refseqs.pkl") as pickle_handle:
