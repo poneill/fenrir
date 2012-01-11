@@ -1,5 +1,5 @@
 import os, pickle
-cwd_contents = os.listdir('.')
+cwd_contents = os.listdir('pickles')
 pickle_filenames = filter(lambda f: "unique" in f, cwd_contents)
 with open("tf_hits.csv","w") as f:
     for pf in pickle_filenames:
