@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os, pickle
 cwd_contents = os.listdir('pickles')
 pickle_filenames = filter(lambda f: "unique" in f, cwd_contents)
