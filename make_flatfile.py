@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import os, pickle
 cwd_contents = os.listdir('pickles')
-pickle_filenames = filter(lambda f: "unique" in f, cwd_contents)
+pickle_filenames = [os.path.join("pickles",f)
+                    for f in cwd_contents if "unique" in f]
 with open("tf_hits.csv","w") as f:
     for pf in pickle_filenames:
         print pf
