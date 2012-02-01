@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, pickle
+# Script for converting a pickle directory to a flatfile (!)
 cwd_contents = os.listdir('pickles')
 pickle_filenames = [os.path.join("pickles",f)
                     for f in cwd_contents if "unique" in f]
