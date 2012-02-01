@@ -1,8 +1,11 @@
 #!/usr/bin/python
-print "starting"
 import sys, re, math, random, itertools, time, pickle
 import matrix_parser, analysis
-default_sequence_file = "upstream/upstream5000.fa"
+from utils import *
+
+
+print "starting"
+default_sequence_file = "../upstream/upstream5000.fa"
 base_pair_ordering = "acgt"
 
 def lexicographic_cmp(xs,ys):
@@ -35,44 +38,6 @@ def pprint(x):
     for row in x:
         print row
         
-def nmers(n):
-    if n == 1:
-        return ["A","C","G","T"]
-    else:
-        return sum([map(lambda(b):b+c,nmers(n-1)) for c in base_pair_ordering],[])
-    
-def safe_log2(x):
-    """Implements log2, but defines log2(0) = 0"""
-    return math.log(x,2) if x > 0 else 0
-
-def complement(base):
-    return {"A":"T","T":"A","G":"C","C":"G"}[base]
-    
-def wc(word):
-    return map(complement, word[::-1])
-
-def split_on(xs, pred):
-    """Split xs into a list of lists each beginning with the next x
-    satisfying pred, except possibly the first"""
-    indices = [i for (i,v) in enumerate(xs) if pred(v)]
-    return [xs[i:j] for (i,j) in zip([0]+indices,indices+[len(xs)]) if i != j]
-    
-def matches_accession_number(line):
-    """Return an re.match object for the accession number pattern """
-    return re.search(r'^AC\s+([A-Z0-9]+)', line)
-
-def matches_column(line):
-    """Return an re.match object for the column pattern"""
-    regexp = """
-^[0-9]+     #Begins with column number
-\s+         #Followed by some whitespace
-            #and now numbers corresponding to the base count at that column:
-([.0-9]+)\s+ #number of As
-([.0-9]+)\s+ #Cs
-([.0-9]+)\s+ #Gs
-([.0-9]+)    #Ts
-"""
-    return re.search(regexp,line,re.VERBOSE)
 
 def matrix_from_lines(lines):
     """Convert raw column lines into matrix.  Assumes all lines are
@@ -80,7 +45,7 @@ def matrix_from_lines(lines):
     return [map(float,matches_column(line).groups()) for line in lines]
 
 def parse_lines_for_matrices(lines):
-    accession_chunks = split_on(lines,matches_accession_number)[1:]
+    accession_chunks = utils.split_on(lines,matches_accession_number)[1:]
     #list containing list of lines beginning with given accession
     #number.  First chunk is filler.
     count_chunks = [[line for line in chunk
@@ -307,8 +272,8 @@ print __name__
 if __name__ == "__main__":
     gene_file = sys.argv[1] if len(sys.argv) > 1 else default_sequence_file
     print "making transfac table"
-    tt = matrix_parser.TransfacTable("dat/matrix.dat")
-    toi = [line.strip() for line in open("terms_of_interest.txt").readlines()]
+    tt = matrix_parser.TransfacTable("../dat/matrix.dat")
+    toi = [line.strip() for line in open("../dat/terms_of_interest.txt").readlines()]
     more_refined = [tf for term in toi
                     for tf in tt.entries
                     if (term.upper() in tf.ID.upper()
