@@ -31,6 +31,8 @@ def total_index_distribution(score_dictionary,cutoff=0):
 
 def index_distribution(promoter, score_dictionary, cutoff = 0,
                        entropy=True, bp_min=0,bp_max=5000):
+    """Search a score_dictionary for a promoter and return the
+    positions of hits falling above the cutoff (PSSM entropy by default)"""
     return [position for tf in score_dictionary[promoter]
             for (position, score) in score_dictionary[promoter][tf]
             if ((bp_min <= position <= bp_max) and
@@ -38,6 +40,8 @@ def index_distribution(promoter, score_dictionary, cutoff = 0,
 
 def tf_distribution(tf, score_dictionary, cutoff = 0,
                     entropy=True, bp_min=0,bp_max=5000):
+    """Find the positional distribution of hits for a given TF over
+    all promoters, i.e. where does the TF bind?"""
     return [position for promoter in score_dictionary
             for (position, score) in score_dictionary[promoter][tf]
             if ((bp_min <= position <= bp_max) and
@@ -55,6 +59,7 @@ def find_peaks(xs):
     return [i for i in range(len(xs)) if xs[i-1] < xs[i] > xs [i+1]]
 
 def bin_indices(indices,n):
+    """Partition indices into n bins"""
     bins = [[index for index in indices if i * (5000/n) <= index < (i + 1)*(5000/n)]  for i in range(n)]
     return bins
 
@@ -74,37 +79,21 @@ def index_of_closest_centroid(xs,centroids):
 def kmeans(xss, k):
     r = 0
     initial_assignment = [random.randint(0,k-1) for i in range(len(xss))]
-#    print "initial assignment: ", initial_assignment
     clusters = [[xs for i, xs in enumerate(xss) if initial_assignment[i] == j] for j in range(k)]
-#    print "clusters: ", clusters
     centroids = map(centroid,clusters)
-#    print "centroids: ", centroids
     updated_assignment = [index_of_closest_centroid(xs, centroids) for xs in xss]
-#    print "updated assignment: ", updated_assignment
     while initial_assignment != updated_assignment:
         r += 1
         initial_assignment = updated_assignment
         clusters = [[xs for i, xs in enumerate(xss) if initial_assignment[i] == j] for j in range(k)]
         centroids = map(centroid,clusters)
         updated_assignment = [index_of_closest_centroid(xs, centroids) for xs in xss]
-#        print updated_assignment
-#        print "round: ",r
         for i,cluster in enumerate(clusters):
-#            print "cluster: ", i
-#            print "size: ", len(cluster)
             cent = centroids[i]
             distances = map(lambda x: distance(x,cent), cluster)
-#            print "avg: ", sum(distances)/len(distances)
-#            print "max: ", max(distances)
-#        print
-#    print "finished on round: ",r
     for i,cluster in enumerate(clusters):
-#        print "cluster: ", i
-#        print "size: ", len(cluster)
         cent = centroids[i]
         distances = map(lambda x: distance(x,cent), cluster)
-#        print "avg: ", sum(distances)/len(distances)
-#        print "max: ", max(distances)
     return assign(xss,updated_assignment)
 
 def cluster_fitness(cluster):
@@ -116,26 +105,20 @@ def fitness(clusters):
     
 def assign(data,assignment):
     """group data by assignment"""
-#    print min(assignment), max(assignment)
     return [[datum for i, datum in enumerate(data)
              if assignment[i] == j]
             for j in range(min(assignment),max(assignment) + 1)]
 
 def select_from_population(pop,tournament_factor,xss):
     contender_assignments = [random.choice(pop) for i in range(tournament_factor)]
-#    print len(contender_assignments), len(contender_assignments[0])
     contender_clusters = [assign(xss,ca) for ca in contender_assignments]
     (winner, fitness_winner) = sorted([(ca,fitness(assign(xss,ca))) for ca in contender_assignments],
                     key = lambda (ca,cf) : cf)[0]
-#    print "select_from_population returns size: ", len(winner)
     return winner
 
 def breed(p,q):
-#    print p, q
-#    print "breed gets: ", len(p), len(q)
     i = random.randint(0,len(p))
     r = p[:i] + q[i:]
-#    print "breed returns size: ", len(r)
     return r
     
 def update_population(pop, tournament_factor, xss):
