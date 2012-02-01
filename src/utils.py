@@ -1,4 +1,5 @@
 from __future__ import division
+import math
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import gaussian_kde
@@ -142,3 +143,41 @@ def separate(pred, lst):
 
 def normalize(xs):
     return map(lambda(x): x/float(sum(xs)),xs)
+def nmers(n):
+    if n == 1:
+        return ["A","C","G","T"]
+    else:
+        return sum([map(lambda(b):b+c,nmers(n-1)) for c in base_pair_ordering],[])
+    
+def safe_log2(x):
+    """Implements log2, but defines log2(0) = 0"""
+    return math.log(x,2) if x > 0 else 0
+
+def complement(base):
+    return {"A":"T","T":"A","G":"C","C":"G"}[base]
+    
+def wc(word):
+    return map(complement, word[::-1])
+
+def split_on(xs, pred):
+    """Split xs into a list of lists each beginning with the next x
+    satisfying pred, except possibly the first"""
+    indices = [i for (i,v) in enumerate(xs) if pred(v)]
+    return [xs[i:j] for (i,j) in zip([0]+indices,indices+[len(xs)]) if i != j]
+    
+def matches_accession_number(line):
+    """Return an re.match object for the accession number pattern """
+    return re.search(r'^AC\s+([A-Z0-9]+)', line)
+
+def matches_column(line):
+    """Return an re.match object for the column pattern"""
+    regexp = """
+^[0-9]+     #Begins with column number
+\s+         #Followed by some whitespace
+            #and now numbers corresponding to the base count at that column:
+([.0-9]+)\s+ #number of As
+([.0-9]+)\s+ #Cs
+([.0-9]+)\s+ #Gs
+([.0-9]+)    #Ts
+"""
+    return re.search(regexp,line,re.VERBOSE)
