@@ -1,4 +1,5 @@
 import re, string, math
+from utils import *
 
 def matches_accession_number(line):
     """Return an re.match object for the accession number pattern """
