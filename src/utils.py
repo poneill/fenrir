@@ -116,3 +116,29 @@ def plot_density(xs):
 
 def add_vectors(vs):
     return map(lambda x: x[0], zip(map(sum, zip(*vs))))
+
+def safe_log2(x):
+    """Implements log2, but defines log2(0) = 0"""
+    return math.log(x,2) if x > 0 else 0
+
+def split_on(xs, pred):
+    """Split xs into a list of lists each beginning with the next x
+    satisfying pred, except possibly the first"""
+    indices = [i for (i,v) in enumerate(xs) if pred(v)]
+    return [xs[i:j] for (i,j) in zip([0]+indices,indices+[len(xs)]) if i != j]
+
+def separate(pred, lst):
+    """separates lst into a list of elements satisfying pred and a list of 
+    elements not satisfying it.
+    """
+    sheep = []
+    goats = []
+    for elem in lst:
+        if pred(elem):
+            sheep.append(elem)
+        else:
+            goats.append(elem)
+    return (sheep, goats)
+
+def normalize(xs):
+    return map(lambda(x): x/float(sum(xs)),xs)
