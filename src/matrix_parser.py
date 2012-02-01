@@ -1,15 +1,5 @@
 import re, string, math
 
-def safe_log2(x):
-    """Implements log2, but defines log2(0) = 0"""
-    return math.log(x,2) if x > 0 else 0
-
-def split_on(xs, pred):
-    """Split xs into a list of lists each beginning with the next x
-    satisfying pred, except possibly the first"""
-    indices = [i for (i,v) in enumerate(xs) if pred(v)]
-    return [xs[i:j] for (i,j) in zip([0]+indices,indices+[len(xs)]) if i != j]
-
 def matches_accession_number(line):
     """Return an re.match object for the accession number pattern """
     return re.search(r'^AC\s+([A-Z0-9]+)', line)
@@ -26,19 +16,6 @@ def matches_column(line):
 ([.0-9]+)    #Ts
 """
     return re.search(regexp,line,re.VERBOSE)
-
-def separate(pred, lst):
-    """separates lst into a list of elements satisfying pred and a list of 
-    elements not satisfying it.
-    """
-    sheep = []
-    goats = []
-    for elem in lst:
-        if pred(elem):
-            sheep.append(elem)
-        else:
-            goats.append(elem)
-    return (sheep, goats)
 
 class TransfacTable(object):
     """Represents matrix.dat"""
@@ -111,6 +88,3 @@ class TranscriptionFactor(object):
         """Convert raw column lines into matrix.  Assumes all lines are
         column lines"""
         return [map(float,matches_column(line).groups()) for line in lines]
-
-def normalize(xs):
-    return map(lambda(x): x/float(sum(xs)),xs)
